@@ -6,14 +6,17 @@ app.use(express.json());
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 app.use(express.static(__dirname + "/public"));
-app.get("/", (_, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
-app.get("/emitter", (_, res) => {
-  res.sendFile(__dirname + "/public/emitter.html");
-});
-app.get("/viewer", (_, res) => {
-  res.sendFile(__dirname + "/public/viewer.html");
+app.use((req, res) => {
+  res.status(404);
+  if (req.accepts("html")) {
+    res.render("404", { url: req.url });
+    return;
+  }
+  if (req.accepts("json")) {
+    res.send({ error: "Not found" });
+    return;
+  }
+  res.type("txt").send("Not found");
 });
 let lastData = "";
 io.on("connection", (socket) => {
@@ -23,4 +26,4 @@ io.on("connection", (socket) => {
     }
   });
 });
-server.listen(3000);
+server.listen(80);
