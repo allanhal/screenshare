@@ -6,5 +6,9 @@
       "use": "@vercel/node"
     }
   ],
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "redirects": [
+    { "source": "/emitter", "destination": "/public/emitter.html" },
+    { "source": "/viewer", "destination": "/public/viewer.html" }
+  ]
 }
