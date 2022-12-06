@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Allan</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>emitter.html</h1>
+
+    <button onclick="screenshotPage()">Screenshot</button>
+    <button onclick="addLI()">Add LI</button>
+    <ul id="customUl"></ul>
+    <script>
+      let socket;
+      async function screenshotPage() {
+        const screenshot = document.documentElement.cloneNode(true);
+        screenshot.style.pointerEvents = "none";
+        screenshot.style.overflow = "hidden";
+        screenshot.style.userSelect = "none";
+        const html = screenshot.outerHTML;
+        const bodyStart = html.indexOf("<" + "body");
+        const bodyEnd = html.indexOf("</" + "body>");
+        const htmlContent = html.substring(bodyStart, bodyEnd);
+        socket && socket.emit("htmlUpdated", htmlContent);
+      }
+
+      function load() {
+        socket = io("http://localhost:3000");
+        var mutationObserver = new MutationObserver((mutations) => {
+          screenshotPage();
+        });
+        mutationObserver.observe(document.documentElement, {
+          attributes: true,
+          characterData: true,
+          childList: true,
+          subtree: true,
+          attributeOldValue: true,
+          characterDataOldValue: true,
+        });
+      }
+
+      function addLI() {
+        let el = document.createElement("li");
+        el.innerHTML = Date.now();
+        customUl.appendChild(el);
+      }
+      load();
+    </script>
+  </body>
+</html>
