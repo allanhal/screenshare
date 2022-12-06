@@ -33,7 +33,7 @@
       }
 
       function load() {
-        socket = io("http://localhost:3000");
+        socket = io("/");
         var mutationObserver = new MutationObserver((mutations) => {
           screenshotPage();
         });

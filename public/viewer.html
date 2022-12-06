@@ -18,7 +18,7 @@
     <div id="content" style="border: 1px solid black"></div>
     <script>
       async function load() {
-        var socket = io("http://localhost:3000");
+        var socket = io("/");
         socket.on("htmlUpdated", function (message) {
           content.innerHTML = message;
         });
